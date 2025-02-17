@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import "./App.css";
 
 import AddQuestion from "./AddQuestion"
-import Login from "./Login"
 
 
 
@@ -13,15 +12,13 @@ function App() {
   return (
     <div className="App">
       <div className="container">
-        <h1>Läkemedelsberäkningar</h1>
-        <nav>
+        {/* <h1>Läkemedelsberäkningar</h1> */}
+        <nav style={{marginTop: "40px", color: "white"}}>
           <button onClick={() => setActiveTab("home")}>Home</button>
-          <button onClick={() => setActiveTab("login")}>Login</button>
           <button onClick={() => setActiveTab("upload")}>Upload Question</button>
         </nav>
-        <div>
+        <div className="content">
           {activeTab === "upload" && <AddQuestion />}
-          {activeTab === "login" && <Login />}
 
         </div>
       </div>

@@ -4,14 +4,29 @@ import axios from "axios";
 export default function AddQuestion() {
     const [question_input, setQuestion] = useState("");
     const [answer_input, setAnswer] = useState("");
-    const [answer_unit, setAnswerUnit] = useState("");
+    const [answer_unit, setAnswerUnit] = useState("g"); // Default unit
+    const [customUnit, setCustomUnit] = useState("");
     const [course_input, setCourse] = useState("");
     const [question_type, setQuestionType] = useState("");
     const [variating_values, setVariatingValues] = useState("");
+    const [isCustomUnit, setIsCustomUnit] = useState(false);
 
     const [isSuccess, setIsSuccess] = useState(false);
     const [responseMessage, setResponseMessage] = useState("");
     const [isUploading, setIsUploading] = useState(false);
+
+    const units = ["g", "mg", "kg", "lb", "oz"];
+
+    const handleUnitChange = (e) => {
+        const value = e.target.value;
+        if (value === "Add Unit...") {
+            setIsCustomUnit(true);
+            setAnswerUnit(""); // Reset the selected unit
+        } else {
+            setIsCustomUnit(false);
+            setAnswerUnit(value);
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -20,25 +35,26 @@ export default function AddQuestion() {
         setIsUploading(true);
 
         try {
-            // Post request to upload question
             const response = await axios.post("http://localhost:5000/api/question/add", {
                 question: question_input,
                 course: course_input,
                 question_type: question_type,
                 variating_values: variating_values,
                 answerFormula: answer_input,
-                answerUnit: answer_unit
+                answerUnit: isCustomUnit ? customUnit : answer_unit,
             });
 
-            setIsSuccess(response.data.success); // Set status of success
-            setResponseMessage(response.data.message); // Set message from response
+            setIsSuccess(response.data.success);
+            setResponseMessage(response.data.message);
             if (response.data.success) {
                 setQuestion("");
                 setCourse("");
                 setQuestionType("");
                 setVariatingValues("");
                 setAnswer("");
-                setAnswerUnit(""); // Also clear the unit field
+                setAnswerUnit("g");
+                setCustomUnit("");
+                setIsCustomUnit(false);
             }
         } catch (err) {
             console.error("Error uploading question:", err);
@@ -46,7 +62,7 @@ export default function AddQuestion() {
             setResponseMessage(err.response?.data?.message || "Failed to upload data. Please try again.");
         } finally {
             setIsUploading(false);
-            setTimeout(() => setResponseMessage(""), 10000); // Hide message after 10 seconds
+            setTimeout(() => setResponseMessage(""), 10000);
         }
     };
 
@@ -62,7 +78,6 @@ export default function AddQuestion() {
                         placeholder="Ex. Question %%var_1%%kg rest of question %%var_2%%?"
                         required />
 
-                    {/* Answer and Unit in a Row */}
                     <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
                         <div style={{ flex: 2 }}>
                             <label>Answer</label>
@@ -74,10 +89,19 @@ export default function AddQuestion() {
                         </div>
                         <div style={{ flex: 1 }}>
                             <label>Unit</label>
-                            <input type="text"
-                                value={answer_unit} 
-                                onChange={(e) => setAnswerUnit(e.target.value)}
-                                placeholder="Ex. kg" />
+                            <select value={isCustomUnit ? "" : answer_unit} onChange={handleUnitChange} required>
+                                {!isCustomUnit && units.map((unit) => (
+                                    <option key={unit} value={unit}>{unit}</option>
+                                ))}
+                                {!isCustomUnit && <option value="Add Unit...">Add Unit...</option>}
+                            </select>
+                            {isCustomUnit && (
+                                <input type="text" 
+                                    value={customUnit} 
+                                    onChange={(e) => setCustomUnit(e.target.value)}
+                                    placeholder="Enter unit"
+                                    required />
+                            )}
                         </div>
                     </div>
 
@@ -113,7 +137,6 @@ export default function AddQuestion() {
                         Add Question
                     </button>
 
-                    {/* Message about the upload */}
                     {responseMessage && (
                         <p style={{
                             color: isSuccess ? "green" : "red", 
