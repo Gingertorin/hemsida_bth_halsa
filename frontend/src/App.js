@@ -1,25 +1,23 @@
 import React, { useState } from "react";
 import "./App.css";
-
-import AddQuestion from "./AddQuestion"
-
-
+import AddQuestion from "./AddQuestion"; // Import AddQuestion component
 
 function App() {
   const [activeTab, setActiveTab] = useState("home");
 
-
   return (
-    <div className="App">
-      <div className="container">
+    <div className="App" >
+      <div className="container" >
         {/* <h1>Läkemedelsberäkningar</h1> */}
-        <nav style={{marginTop: "40px", color: "white"}}>
+        <header style={{ marginTop: "40px", color: "white" }}>
+          <div style={{ display: "flex", justifyContent: "center", gap: "20px"}}>
           <button onClick={() => setActiveTab("home")}>Home</button>
-          <button onClick={() => setActiveTab("upload")}>Upload Question</button>
-        </nav>
+          <button onClick={() => setActiveTab("addQuestion")}>Add Question</button>
+          </div>
+        </header>
         <div className="content">
-          {activeTab === "upload" && <AddQuestion />}
-
+          {activeTab === "home" && <h2>Welcome to Home</h2>}
+          {activeTab === "addQuestion" && <AddQuestion />}
         </div>
       </div>
     </div>
