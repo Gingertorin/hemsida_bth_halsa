@@ -11,7 +11,7 @@ En webbapplikation för sjuksköterskestudenter vid BTH för at öva på olika l
 | **answer_unit** | text | The unit of the answer store as string. +|
 | **answer_formula** | text | A string with the formula to calculate the answer using the variables. |
 | **variating_values** | text | A string in JSON format that sets the rules to generate the values for the question. |
-| **course** | tesxt| The course code for the question two letters and 4 numbers. |
+| **course** | text| The course code for the question two letters and 4 numbers. |
 | **question_type** | text | Short string describing the question type. |
 
 ### **Exempel på en fråga i JSON format**
