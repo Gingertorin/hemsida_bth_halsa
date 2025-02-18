@@ -26,7 +26,7 @@ If the branch does not exist locally, fetch it from the remote repository and ch
 
 ```bash
 git fetch origin
-git checkout -b <branch_name (eg 'elias')> origin/<branch_name (eg elias)>
+git checkout -b <branch_name (eg 'elias')>
 ```
 
 ### 3. Pull Latest Changes
