@@ -16,7 +16,7 @@ db.serialize(() => {
         CREATE TABLE IF NOT EXISTS units (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             ascii_name TEXT NOT NULL UNIQUE,
-            accepted_answer TEXT NOT NULL
+            accepted_answer TEXT NOT NULL CHECK(json_valid(accepted_answer))   -- FIX:: Should be json list
         )
     `);
 
