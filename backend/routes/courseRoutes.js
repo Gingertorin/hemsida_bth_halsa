@@ -1,18 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const { addRecord, getRecords, getRecordById, updateRecord, deleteRecord } = require("../models/questionModel");
-
+const { validateCourseCode } = require("../helpers/courseHelpers");
 
 // ----------------------------- Help Fuctions -----------------------------
-
-/**
- * Validates the 'course_code' field to ensure it follows the pattern XX0000.
- * @param {string} courseCode - The course code to validate.
- * @returns {boolean} - Returns true if valid, otherwise false.
- */
-const validateCourseCode = (courseCode) => {
-    return /^[A-Z]{2}\d{4}$/.test(courseCode);
-};
 
 
 

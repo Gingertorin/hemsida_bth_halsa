@@ -1,40 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const { addRecord, getRecords } = require("../models/questionModel");
+const { addRecord, getRecords, getRecordById } = require("../models/questionModel");
+const { isValidJsonArray, isPositiveInteger, getRandomElement } = require("../helpers/routeHelpers");
+const { generateValues, evaluateFormula } = require("../helpers/questionHelpers");
 
-// ----------------------------- Helper Functions -----------------------------
 
-/**
- * Validates that a value is a positive integer.
- * @param {any} value - The value to check.
- * @returns {boolean} - Returns true if it's a valid positive integer.
- */
-const isPositiveInteger = (value) => {
-    return Number.isInteger(value) && value > 0;
-};
 
-/**
- * Validates if a string is a valid JSON array.
- * @param {string} jsonString - The JSON string to validate.
- * @returns {boolean} - Returns true if valid, otherwise false.
- */
-const isValidJsonArray = (jsonString) => {
-    try {
-        const parsed = JSON.parse(jsonString);
-        return Array.isArray(parsed);
-    } catch {
-        return false;
-    }
-};
-
-/**
- * Converts the course code to uppercase.
- * @param {string} courseCode - The course code.
- * @returns {string} - The uppercase course code.
- */
-const formatCourseCode = (courseCode) => {
-    return courseCode.toUpperCase();
-};
 
 // ----------------------------- Add Entry -----------------------------
 
@@ -69,7 +40,7 @@ router.post("/question/add", async (req, res) => {
             return res.status(400).json({ success: false, message: "variating_values must be a valid JSON array." });
         }
 
-        course_code = formatCourseCode(course_code); // Convert course_code to uppercase
+        course_code = course_code.toUpperCase()
 
         try {
             const result = await addRecord("question_data", 
@@ -85,6 +56,57 @@ router.post("/question/add", async (req, res) => {
         }
     } catch (err) {
         res.status(err.status || 500).json({ success: false, message: err.message || "Error adding question" });
+    }
+});
+
+// ----------------------------- Get Question -----------------------------
+
+/**
+ * @route GET /question/random
+ * @desc Retrieves a random question based on course_code or question_type_id, processes it by generating values and computing the answer.
+ * @param {Object} req - Express request object.
+ * @param {string} [req.query.course_code] - Optional course code filter.
+ * @param {number} [req.query.question_type_id] - Optional question type ID filter.
+ * @param {Object} res - Express response object.
+ * @returns {Object} - JSON response with a fully processed question or an error message.
+ */
+router.get("/question/random", async (req, res) => {
+    try {
+        const { course_code, question_type_id } = req.query;
+
+        if (!course_code && !question_type_id) {
+            return res.status(400).json({ success: false, message: "A course code or question type ID must be provided." });
+        }
+
+        const filters = {};
+        if (course_code) filters.course_code = formatCourseCode(course_code);
+        if (question_type_id && isPositiveInteger(Number(question_type_id))) {
+            filters.question_type_id = Number(question_type_id);
+        }
+
+        const questions = await getRecords("question_data", filters);
+        if (questions.length === 0) {
+            return res.status(404).json({ success: false, message: "No questions found for the given filters." });
+        }
+
+        // Select a random question
+        const randomQuestion = getRandomElement(questions);
+        const generatedValues = generateValues(randomQuestion.variating_values);
+        const computedAnswer = evaluateFormula(randomQuestion.answer_formula, generatedValues);
+
+        // Process and return the question
+        const processedQuestion = {
+            id: randomQuestion.id,
+            question: randomQuestion.question,
+            generated_values: generatedValues,
+            computed_answer: computedAnswer,
+            course_code: randomQuestion.course_code,
+            question_type_id: randomQuestion.question_type_id
+        };
+
+        res.status(200).json({ success: true, data: processedQuestion });
+    } catch (err) {
+        res.status(500).json({ success: false, message: "Error retrieving and processing question" });
     }
 });
 
