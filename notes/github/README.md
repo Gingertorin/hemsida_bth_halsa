@@ -102,37 +102,19 @@ After pushing to your branch, go to GitHub and create a Pull Request (PR) to mer
 To keep your branch up to date with the latest changes from `main`, follow these steps:
 
 ```bash
-git checkout main
+git fetch origin
 ```
 
-First, pull the latest changes from `main`:
+Make sure you are in your branch:
 
 ```bash
-git pull origin main
-```
-
-Then, switch back to your branch:
-
-```bash
-git checkout <branch_name>
+git branch -a
 ```
 
 Merge the latest `main` changes into your branch:
 
 ```bash
-git merge main
-```
-
-If there are conflicts, resolve them manually in the affected files. After resolving conflicts, stage the changes:
-
-```bash
-git add .
-```
-
-Commit the merge:
-
-```bash
-git commit -m "Merged main into <branch_name>"
+git merge origin/main
 ```
 
 Push the updated branch back to GitHub:
