@@ -87,7 +87,7 @@ git commit -m "Describe your changes here"
 
 ### 7. Push Changes to Your Branch
 
-Push the committed changes to your remove branch (eg 'elias'):
+Push the committed changes to your remote branch (eg 'elias'):
 
 ```bash
 git push origin <branch_name (eg elias)>
@@ -96,3 +96,31 @@ git push origin <branch_name (eg elias)>
 ### 8. Create a Pull Request
 
 After pushing to your branch, go to GitHub and create a Pull Request (PR) to merge your branch into main. Wait for merge approval by another team member.
+
+### 9. Merging the Latest Changes from `main` into Your Branch
+
+To keep your branch up to date with the latest changes from `main`, follow these steps:
+
+```bash
+git fetch origin
+```
+
+Make sure you are in your branch:
+
+```bash
+git branch -a
+```
+
+Merge the latest `main` changes into your branch:
+
+```bash
+git merge origin/main
+```
+
+Push the updated branch back to GitHub:
+
+```bash
+git push origin <branch_name>
+```
+
+This ensures your branch stays in sync with the latest project updates before submitting a pull request.
