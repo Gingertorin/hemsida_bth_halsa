@@ -55,6 +55,9 @@ router.post("/course/add", async (req, res) => {
         if (!course_code || !course_name || !question_types) {
             return res.status(400).json({ success: false, message: "Missing required fields" });
         }
+
+        course_code = course_code.toUpperCase(); // Convert to uppercase before validation and storage
+
         if (!validateCourseCode(course_code)) {
             return res.status(400).json({ success: false, message: "Invalid course_code format. Must be two uppercase letters followed by four digits (e.g., CS1001)." });
         }
