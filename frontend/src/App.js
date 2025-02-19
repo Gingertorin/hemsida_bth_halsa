@@ -15,9 +15,11 @@ function App() {
       <div className="container">
         {/* <h1>Läkemedelsberäkningar</h1> */}
         <nav style={{marginTop: "40px", color: "white"}}>
-          <button onClick={() => setActiveTab("home")}>Home</button>
-          <button onClick={() => setActiveTab("upload")}>Upload Question</button>
+          <button onClick={() => setActiveTab("home")}>Hem</button>
+          <button onClick={() => setActiveTab("upload")}>Lägg Till Frågor</button>
+          <button onClick={() => setActiveTab("home")}>Quiz</button>
         </nav>
+
         <div className="content">
           {activeTab === "upload" && <AddQuestion />}
 
