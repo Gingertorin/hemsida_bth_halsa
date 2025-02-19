@@ -1,6 +1,6 @@
 const request = require("../../../backend/node_modules/supertest");
 const express = require("../../../backend/node_modules/express");
-const questionRoutes = require("../../../backend/routes/questionsRoutes.js");
+const questionRoutes = require("questionsRoutes.js");
 const { 
   addRecord, 
   getRecords, 

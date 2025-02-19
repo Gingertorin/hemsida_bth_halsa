@@ -1,18 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const { addRecord, getRecords, getRecordById, updateRecord, deleteRecord } = require("../models/questionModel");
-
+const { validateCourseCode } = require("../helpers/courseHelpers");
 
 // ----------------------------- Help Fuctions -----------------------------
-
-/**
- * Validates the 'course_code' field to ensure it follows the pattern XX0000.
- * @param {string} courseCode - The course code to validate.
- * @returns {boolean} - Returns true if valid, otherwise false.
- */
-const validateCourseCode = (courseCode) => {
-    return /^[A-Z]{2}\d{4}$/.test(courseCode);
-};
 
 
 
@@ -55,6 +46,9 @@ router.post("/course/add", async (req, res) => {
         if (!course_code || !course_name || !question_types) {
             return res.status(400).json({ success: false, message: "Missing required fields" });
         }
+
+        course_code = course_code.toUpperCase(); // Convert to uppercase before validation and storage
+
         if (!validateCourseCode(course_code)) {
             return res.status(400).json({ success: false, message: "Invalid course_code format. Must be two uppercase letters followed by four digits (e.g., CS1001)." });
         }
