@@ -32,59 +32,61 @@ const Login = ({ onLogin }) => {
 
 
   return (
-    <div className={`container ${isSignUp ? "right-panel-active" : ""}`} id="container" style={{
-      backgroundColor: "#fff",
-      borderRadius: "10px",
-      boxShadow: "0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22)",
-      position: "relative",
-      overflow: "hidden",
-      width: "768px",
-      maxWidth: "100%",
-      minHeight: "480px"
-    }}>
-      {/* Signup Form */}
-      <div className="form-container sign-up-container">
-        <form>
-          <h1>Skappa konto</h1>
-          <input type="text" placeholder="Namn" />
-          <input type="text" placeholder="Användernamn" />
-          <input type="password" placeholder="Lösningsord" />
-          <button>Registrera</button>
-        </form>
-      </div>
+    <div className={`login-page login-background`}>
+      <div className={`container ${isSignUp ? "right-panel-active" : ""}`} id="container" style={{
+        backgroundColor: "#fff",
+        borderRadius: "10px",
+        boxShadow: "0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22)",
+        position: "relative",
+        overflow: "hidden",
+        width: "768px",
+        maxWidth: "100%",
+        minHeight: "480px"
+      }}>
+        {/* Signup Form */}
+        <div className="form-container sign-up-container">
+          <form>
+            <h1>Skappa konto</h1>
+            <input type="text" placeholder="Namn" />
+            <input type="text" placeholder="Användernamn" />
+            <input type="password" placeholder="Lösningsord" />
+            <button>Registrera</button>
+          </form>
+        </div>
 
-      {/* Login Form */}
-      <div className="form-container sign-in-container">
-        <form onSubmit={handleLogin}>
-          <h1>Logga In</h1>
-          <input
-            type="text"
-            placeholder="Användernamn"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Lösningsord"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button type="submit">Logga In</button>
-        </form>
-      </div>
+        {/* Login Form */}
+        <div className="form-container sign-in-container">
+          <form onSubmit={handleLogin}>
+            <h1>Logga In</h1>
+            <input
+              type="text"
+              placeholder="Användernamn"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <input
+              type="password"
+              placeholder="Lösningsord"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button type="submit">Logga In</button>
+          </form>
+        </div>
 
-      {/* Overlay for Animation */}
-      <div className="overlay-container">
-        <div className="overlay">
-          <div className="overlay-panel overlay-left">
-            <h1>Välkomen tillbacka!</h1>
-            <p>Logga in för att komma igång</p>
-            <button className="ghost" onClick={() => setIsSignUp(false)}>Logga In</button>
-          </div>
-          <div className="overlay-panel overlay-right">
-            <h1>Hej, studenter!</h1>
-            <p>Använd ditt info för att registrera</p>
-            <button className="ghost" onClick={() => setIsSignUp(true)}>Registrera</button>
+        {/* Overlay for Animation */}
+        <div className="overlay-container">
+          <div className="overlay">
+            <div className="overlay-panel overlay-left">
+              <h1>Välkomen tillbacka!</h1>
+              <p>Logga in för att komma igång</p>
+              <button className="ghost" onClick={() => setIsSignUp(false)}>Logga In</button>
+            </div>
+            <div className="overlay-panel overlay-right">
+              <h1>Hej, studenter!</h1>
+              <p>Använd ditt info för att registrera</p>
+              <button className="ghost" onClick={() => setIsSignUp(true)}>Registrera</button>
+            </div>
           </div>
         </div>
       </div>
