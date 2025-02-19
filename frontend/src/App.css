@@ -1,5 +1,12 @@
 .App {
   text-align: center;
+  background: url('../public/bild_4.jpeg') no-repeat center center fixed;
+  background-size: cover;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .App-logo {
@@ -35,4 +42,10 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
 }
