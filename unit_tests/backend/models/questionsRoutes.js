@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { addRecord, getRecords, getRecordById, updateRecord, deleteRecord } = require("../models/questionModel");
+const { addRecord, getRecords, getRecordById, updateRecord, deleteRecord } = require("../../../backend/models/questionModel");
 
 const tables = ["units", "course", "medicine", "qtype", "question_data"];
 
