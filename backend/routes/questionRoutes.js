@@ -43,6 +43,12 @@ const formatCourseCode = (courseCode) => {
  * @desc Adds a new question to the database.
  * @param {Object} req - Express request object.
  * @param {Object} req.body - Request body containing question details.
+ * @param {string} req.body.question - The text of the question.
+ * @param {number} req.body.answer_unit_id - The ID of the answer unit (must exist in the units table).
+ * @param {string} req.body.answer_formula - The formula for calculating the answer.
+ * @param {string} req.body.variating_values - A JSON string representing an array of variating values.
+ * @param {string} req.body.course_code - The course code (will be converted to uppercase).
+ * @param {number} req.body.question_type_id - The ID of the question type (must exist in the qtype table).
  * @param {Object} res - Express response object.
  * @returns {Object} - JSON response with success status and message.
  */
