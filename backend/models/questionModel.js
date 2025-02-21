@@ -16,7 +16,7 @@ db.serialize(() => {
         CREATE TABLE IF NOT EXISTS units (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             ascii_name TEXT NOT NULL UNIQUE,
-            accepted_answer TEXT NOT NULL
+            accepted_answer TEXT NOT NULL CHECK(json_valid(accepted_answer))   -- FIX:: Should be json list
         )
     `);
 
@@ -59,7 +59,7 @@ db.serialize(() => {
             hint_id INTEGER NOT NULL,
             wrong_answer INTEGER DEFAULT 0,
             right_answer INTEGER DEFAULT 0,
-            FOREIGN KEY (hint_id) REFERENCES hints(id),
+            -- FOREIGN KEY (hint_id) REFERENCES hints(id),
             FOREIGN KEY (course_code) REFERENCES course(course_code),
             FOREIGN KEY (question_type_id) REFERENCES qtype(id),
             FOREIGN KEY (answer_unit_id) REFERENCES units(id)
