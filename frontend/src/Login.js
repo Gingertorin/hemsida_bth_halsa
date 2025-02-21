@@ -20,7 +20,7 @@ const Login = ({ onLogin }) => {
       const data = response.json();
       // if (response.ok) {
       if (2==2) {
-        navigate("/app"); // Navigate after successful login
+        navigate("/home"); // Navigate after successful login
       } else {
         alert(data.message || "Invalid credentials"); // Handle errors
       }
