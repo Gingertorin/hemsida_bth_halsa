@@ -79,7 +79,7 @@ router.get("/question/random", async (req, res) => {
         }
 
         const filters = {};
-        if (course_code) filters.course_code = formatCourseCode(course_code);
+        if (course_code) filters.course_code = course_code.toUpperCase();
         if (question_type_id && isPositiveInteger(Number(question_type_id))) {
             filters.question_type_id = Number(question_type_id);
         }
@@ -103,7 +103,7 @@ router.get("/question/random", async (req, res) => {
             course_code: randomQuestion.course_code,
             question_type_id: randomQuestion.question_type_id
         };
-
+        console.log("Test")
         res.status(200).json({ success: true, data: processedQuestion });
     } catch (err) {
         res.status(500).json({ success: false, message: "Error retrieving and processing question" });
