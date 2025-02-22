@@ -23,7 +23,7 @@ const { generateValues, evaluateFormula } = require("../helpers/questionHelpers"
  * @param {Object} res - Express response object.
  * @returns {Object} - JSON response with success status and message.
  */
-router.post("/question/add", async (req, res) => {
+router.post("/add", async (req, res) => {
     try {
         let { question, answer_unit_id, answer_formula, variating_values, course_code, question_type_id } = req.body;
 
@@ -70,7 +70,7 @@ router.post("/question/add", async (req, res) => {
  * @param {Object} res - Express response object.
  * @returns {Object} - JSON response with a fully processed question or an error message.
  */
-router.get("/question/random", async (req, res) => {
+router.get("/random", async (req, res) => {
     try {
         const { course_code, question_type_id } = req.query;
 
