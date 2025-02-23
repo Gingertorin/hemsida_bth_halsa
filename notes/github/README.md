@@ -124,3 +124,29 @@ git push origin <branch_name>
 ```
 
 This ensures your branch stays in sync with the latest project updates before submitting a pull request.
+
+### 10. Merging the Latest Changes from `other_persons_branch` into your Branch
+
+To keep your branch up to date with the latest changes from `other_persons_branch`, follow these steps:
+
+```bash
+git fetch origin
+```
+
+Make sure you are in your branch:
+
+```bash
+git branch -a
+```
+
+Merge the latest `other_persons_branch` changes into your branch:
+
+```bash
+git merge origin/<other_persons_branch>
+```
+
+To update your remote branch, push the updated branch back to GitHub:
+
+```bash
+git push origin <your_branch_name>
+```

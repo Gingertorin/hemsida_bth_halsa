@@ -10,10 +10,10 @@ const tempDb = {
     ],
 
     courses: [
-        { id: 1, course_code: "KM1423", course_name: "", question_types: "" },
-        { id: 2, course_code: "KM1424", course_name: "", question_types: "" },
-        { id: 3, course_code: "KM1425", course_name: "", question_types: "" },
-        { id: 4, course_code: "OM1541", course_name: "", question_types: "" }
+        { course_code: "KM1423", course_name: "", question_types: "" },
+        { course_code: "KM1424", course_name: "", question_types: "" },
+        { course_code: "KM1425", course_name: "", question_types: "" },
+        { course_code: "OM1541", course_name: "", question_types: "" }
     ],  // Questions can belong to multiple courses (solve with list of id's in question?)
 
     qtypes: [
