@@ -24,24 +24,45 @@ const AddQuestion = () => {
   const [isSavingCourse, setIsSavingCourse] = useState(false);
   const [courseSaveMessage, setCourseSaveMessage] = useState('');
 
-  // Fetch available courses, question types, and units on component mount
+  // State for qtype modal popup
+  const [isQtypeModalOpen, setQtypeModalOpen] = useState(false);
+  const [newQtypeName, setNewQtypeName] = useState('');
+  const [isSavingQtype, setIsSavingQtype] = useState(false);
+  const [qtypeSaveMessage, setQtypeSaveMessage] = useState('');
+
+  // Functions to fetch fresh data from the backend
+  const fetchCourses = async () => {
+    try {
+      const coursesRes = await axios.get('http://localhost:5000/api/course/all');
+      setCourses(coursesRes.data.records);
+    } catch (err) {
+      console.error('Error fetching courses:', err);
+    }
+  };
+
+  const fetchQtypes = async () => {
+    try {
+      const qtypesRes = await axios.get('http://localhost:5000/api/qtype/all');
+      setQtypes(qtypesRes.data.records);
+    } catch (err) {
+      console.error('Error fetching question types:', err);
+    }
+  };
+
+  const fetchUnits = async () => {
+    try {
+      const unitsRes = await axios.get('http://localhost:5000/api/units/all');
+      setUnits(unitsRes.data.records);
+    } catch (err) {
+      console.error('Error fetching units:', err);
+    }
+  };
+
+  // Fetch initial data on component mount
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const coursesRes = await axios.get('/api/course/all');
-        setCourses(coursesRes.data);
-
-        const qtypesRes = await axios.get('/api/qtype/all');
-        setQtypes(qtypesRes.data);
-
-        const unitsRes = await axios.get('/api/units/all');
-        setUnits(unitsRes.data);
-      } catch (err) {
-        console.error('Error fetching data:', err);
-      }
-    };
-
-    fetchData();
+    fetchCourses();
+    fetchQtypes();
+    fetchUnits();
   }, []);
 
   // Handle main question form submission
@@ -53,12 +74,12 @@ const AddQuestion = () => {
       answer_unit_id: answerUnit,
       answer_formula: answerFormula,
       variating_values: variatingValues, // Should be a valid JSON string
-      course_code,
+      course_code: course,
       question_type_id: questionType
     };
 
     try {
-      const response = await axios.post('/api/question/add', newQuestion);
+      const response = await axios.post('http://localhost:5000/api/question/add', newQuestion);
       console.log('Question added successfully:', response.data);
       // Clear form fields after success
       setQuestion('');
@@ -67,6 +88,7 @@ const AddQuestion = () => {
       setVariatingValues('');
       setCourse('');
       setQuestionType('');
+      setnewQtypeList('');
     } catch (error) {
       console.error('Error adding question:', error);
     }
@@ -81,14 +103,27 @@ const AddQuestion = () => {
     }
   };
 
+  // Handle changes in the question type dropdown
+  const handleQtypeChange = (e) => {
+    if (e.target.value === '__new__') {
+      setQtypeModalOpen(true);
+    } else {
+      setQuestionType(e.target.value);
+    }
+  };
+
   // Handle submission of the new course from the modal
   const handleNewCourseSubmit = async (e) => {
     e.preventDefault();
-    console.log('Saving new course:', newCourseCode, newCourseName);
+    console.log('Saving new course:', newCourseCode, newCourseName, newQtypeList);
     setIsSavingCourse(true);
     setCourseSaveMessage('Saving course...');
     try {
-      const res = await axios.post('http://localhost:5000/api/course/add', { code: newCourseCode, name: newCourseName, question_type: newQtypeList });
+      const res = await axios.post('http://localhost:5000/api/course/add', { 
+        code: newCourseCode, 
+        name: newCourseName, 
+        question_type: newQtypeList 
+      });
       if (res && res.data) {
         // Update courses list with the new course
         setCourses((prevCourses) => [...prevCourses, res.data]);
@@ -99,6 +134,7 @@ const AddQuestion = () => {
         setTimeout(() => {
           setNewCourseCode('');
           setNewCourseName('');
+          setnewQtypeList('');
           setCourseModalOpen(false);
           setCourseSaveMessage('');
         }, 1000);
@@ -110,6 +146,35 @@ const AddQuestion = () => {
       setCourseSaveMessage('Error saving course');
     }
     setIsSavingCourse(false);
+  };
+
+  // Handle submission of the new question type from the qtype modal
+  const handleNewQtypeSubmit = async (e) => {
+    e.preventDefault();
+    console.log('Saving new question type:', newQtypeName);
+    setIsSavingQtype(true);
+    setQtypeSaveMessage('Saving question type...');
+    try {
+      const res = await axios.post('http://localhost:5000/api/qtype/add', { name: newQtypeName });
+      if (res && res.data) {
+        // Update qtypes list with the new question type
+        setQtypes((prevQtypes) => [...prevQtypes, res.data]);
+        // Set the new question type as the selected one
+        setQuestionType(res.data.id || newQtypeName);
+        setQtypeSaveMessage('Question type saved successfully!');
+        setTimeout(() => {
+          setNewQtypeName('');
+          setQtypeModalOpen(false);
+          setQtypeSaveMessage('');
+        }, 1000);
+      } else {
+        setQtypeSaveMessage('Error: No response data');
+      }
+    } catch (err) {
+      console.error('Error adding new question type:', err);
+      setQtypeSaveMessage('Error saving question type');
+    }
+    setIsSavingQtype(false);
   };
 
   return (
@@ -128,13 +193,21 @@ const AddQuestion = () => {
 
         <div>
           <label>Answer Unit</label>
-          <select value={answerUnit} onChange={(e) => setAnswerUnit(e.target.value)}>
+          <select 
+            value={answerUnit} 
+            onChange={(e) => setAnswerUnit(e.target.value)}
+            onFocus={fetchUnits}
+          >
             <option value="">Select a unit</option>
-            {units.map((unit) => (
+            {Array.isArray(units) && units.length > 0 ? (
+              units.map((unit) => (
               <option key={unit.id} value={unit.name}>
                 {unit.name}
               </option>
-            ))}
+            ))
+          ) : (
+            <option disabled>Loading or No Units Available</option>
+          )}
           </select>
         </div>
 
@@ -160,32 +233,50 @@ const AddQuestion = () => {
 
         <div>
           <label>Course</label>
-          <select value={course} onChange={handleCourseChange}>
+          <select 
+            value={course} 
+            onChange={handleCourseChange}
+            onFocus={fetchCourses}
+          >
             <option value="">Select a course</option>
-            {courses.map((crs) => (
+            {Array.isArray(courses) && courses.length > 0 ? (
+              courses.map((crs) => (
               <option key={crs.id} value={crs.code}>
                 {crs.code}
               </option>
-            ))}
+            ))
+          ) : (
+            <option disabled>Loading or No Courses Available</option>
+          )}
             <option value="__new__">Add new course</option>
           </select>
         </div>
 
         <div>
           <label>Question Type</label>
-          <select value={questionType} onChange={(e) => setQuestionType(e.target.value)}>
+          <select 
+            value={questionType} 
+            onChange={handleQtypeChange}
+            onFocus={fetchQtypes}
+          >
             <option value="">Select a question type</option>
-            {qtypes.map((qt) => (
-              <option key={qt.id} value={qt.type}>
-                {qt.type}
+            {Array.isArray(qtypes) && qtypes.length > 0 ? (
+              qtypes.map((qt) => (
+              <option key={qt.id} value={qt.id}>
+                {qt.name}
               </option>
-            ))}
+            ))
+          ) : (
+            <option disabled>Loading or No Question Types Available</option>
+          )}
+            <option value="__new__">Add new question type</option>
           </select>
         </div>
 
         <button type="submit">Add Question</button>
       </form>
 
+      {/* Course Modal */}
       {isCourseModalOpen && (
         <div className="modal-overlay">
           <div className="modal">
@@ -210,13 +301,50 @@ const AddQuestion = () => {
                   placeholder="Enter course name"
                 />
               </div>
+              <div>
+                <label>Question type list</label>
+                <input
+                  type="text"
+                  value={newQtypeList}
+                  onChange={(e) => setnewQtypeList(e.target.value)}
+                  placeholder='["qtype_id1", "qtype_id2"]'
+                />
+              </div>
               <button type="submit" disabled={isSavingCourse}>
-                {isSavingCourse ? 'Saving...' : 'Save Course'}
+                {isSavingCourse ? 'Saving...' : 'Submit'}
               </button>
               <button type="button" onClick={() => setCourseModalOpen(false)}>
                 Cancel
               </button>
               {courseSaveMessage && <p>{courseSaveMessage}</p>}
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Question Type Modal */}
+      {isQtypeModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h3>Add New Question Type</h3>
+            <form onSubmit={handleNewQtypeSubmit}>
+              <div>
+                <label>Question Type Name</label>
+                <input
+                  type="text"
+                  value={newQtypeName}
+                  onChange={(e) => setNewQtypeName(e.target.value)}
+                  placeholder="e.g. Dosage Calculation"
+                  required
+                />
+              </div>
+              <button type="submit" disabled={isSavingQtype}>
+                {isSavingQtype ? 'Saving...' : 'Submit'}
+              </button>
+              <button type="button" onClick={() => setQtypeModalOpen(false)}>
+                Cancel
+              </button>
+              {qtypeSaveMessage && <p>{qtypeSaveMessage}</p>}
             </form>
           </div>
         </div>
