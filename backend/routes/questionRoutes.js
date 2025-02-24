@@ -23,7 +23,7 @@ const { generateValues, evaluateFormula } = require("../helpers/questionHelpers"
  * @param {Object} res - Express response object.
  * @returns {Object} - JSON response with success status and message.
  */
-router.post("/question/add", async (req, res) => {
+router.post("/add", async (req, res) => {
     try {
         let { question, answer_unit_id, answer_formula, variating_values, course_code, question_type_id } = req.body;
 
@@ -70,7 +70,7 @@ router.post("/question/add", async (req, res) => {
  * @param {Object} res - Express response object.
  * @returns {Object} - JSON response with a fully processed question or an error message.
  */
-router.get("/question/random", async (req, res) => {
+router.get("/random", async (req, res) => {
     try {
         const { course_code, question_type_id } = req.query;
 
@@ -79,7 +79,7 @@ router.get("/question/random", async (req, res) => {
         }
 
         const filters = {};
-        if (course_code) filters.course_code = formatCourseCode(course_code);
+        if (course_code) filters.course_code = course_code.toUpperCase();
         if (question_type_id && isPositiveInteger(Number(question_type_id))) {
             filters.question_type_id = Number(question_type_id);
         }
@@ -103,7 +103,7 @@ router.get("/question/random", async (req, res) => {
             course_code: randomQuestion.course_code,
             question_type_id: randomQuestion.question_type_id
         };
-
+        console.log("Test")
         res.status(200).json({ success: true, data: processedQuestion });
     } catch (err) {
         res.status(500).json({ success: false, message: "Error retrieving and processing question" });

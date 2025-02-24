@@ -1,33 +1,25 @@
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 import "./App.css";
 
-
+import AddQuestion from "./AddQuestion"
+import MenuBar from "./MenuBar"
+import FooterMenuBar from "./FooterMenuBar"; // New import
 
 function App() {
-  const navigate = useNavigate();
-
-  const handletab = (tab) => {
-    if (tab === "home") {
-      navigate("/home");
-    }
-    if (tab === "addquestion") {
-      navigate("/AddQuestion");
-    }
-    if (tab === "question") {
-      navigate("/question");
-    }
-  };
+  const [activeTab, setActiveTab] = useState("home");
 
   return (
     <div className="App">
+      {/* Place MenuBar at the top */}
+      <MenuBar setActiveTab={setActiveTab} />
       <div className="container">
         {/* <h1>Läkemedelsberäkningar</h1> */}
-        <nav style={{marginTop: "40px", color: "white"}}>
-          <button onClick={() => handletab("home")}>Hem</button>
-          <button onClick={() => handletab("addquestion")}>Lägg Till Frågor</button>
-          <button onClick={() => handletab("question")}>Quiz</button>
-        </nav>
+        {/* Removed old nav menu */}
+        <div className="content">
+          {activeTab === "upload" && <AddQuestion />}
+        </div>
       </div>
+      <FooterMenuBar />  {/* Render footer */}
     </div>
   );
 }

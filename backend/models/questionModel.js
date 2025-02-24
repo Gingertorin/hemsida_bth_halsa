@@ -117,9 +117,9 @@ const addRecord = (table, columns, values) => {
  * @param {string} table - The table name.
  * @returns {Promise<Array>} - The retrieved records.
  */
-const getRecords = (table) => {
+const getRecords = async (table) => {
     return new Promise((resolve, reject) => {
-        db.all(`SELECT * FROM ${table}`, [], (err, rows) => {
+        db.all(`SELECT * FROM ${table}`, (err, rows) => {
             if (err) return reject({ message: "Database error", status: 500 });
             resolve(rows);
         });
