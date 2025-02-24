@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { addRecord, updateRecord, getRecordById } = require("../models/questionModel");
 
-router.post("/qtype/add", async (req, res) => {
+router.post("/add", async (req, res) => {
     try {
         let { name } = req.body; // Only allow `name`
 

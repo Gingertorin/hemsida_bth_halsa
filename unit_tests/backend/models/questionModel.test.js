@@ -18,10 +18,10 @@ jest.mock("../../../backend/models/questionModel");
 describe("API Routes for Question Database", () => {
   const sampleRecords = {
     question_data: {
-      question: "Sample Question",
+      question: "Sample Question %%x%% + %%y%%",
       answer_unit_id: 1,
-      answer_formula: "x+1",
-      variating_values: '{"x": 2}',
+      answer_formula: "x+y",
+      variating_values: '{"x": [2,4], "y": [1,10]}',
       course_code: "CS101",
       question_type_id: 1,
       hint_id: 1
