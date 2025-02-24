@@ -15,8 +15,8 @@ describe("Units Routes", () => {
 
   // A valid unit record for testing.
   const validUnit = {
-    ascii_name: "unit1",
-    accepted_answer: '["answer1", "answer2"]'
+    ascii_name: "mg",
+    accepted_answer: '["mg", "Mg", "mG", "MG"]'
   };
 
   it("should add a new unit record and return success message", async () => {
