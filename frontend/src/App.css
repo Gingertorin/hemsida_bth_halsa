@@ -1,6 +1,5 @@
 .App {
   text-align: center;
-  background: url('../public/bild_4.jpeg') no-repeat center center fixed;
   background-size: cover;
   width: 100vw;
   height: 100vh;
@@ -15,7 +14,7 @@
 }
 
 .App {
-  background-image: url('../public/img1.png');
+  background-image: url('../public/img4.png');
   background-size: cover;
   background-position: center;
   width: 100vw;

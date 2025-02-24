@@ -1,0 +1,19 @@
+.footer-menu-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background: linear-gradient(90deg, #273469 0%, #4a5cac 100%);
+  padding: 30px;
+  box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.footer-menu-text {
+  margin-left: 20px;
+  font-weight: 800;
+  color: white;
+  font-size: 1.6rem;
+}
