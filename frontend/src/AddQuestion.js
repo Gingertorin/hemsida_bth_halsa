@@ -179,101 +179,105 @@ const AddQuestion = () => {
 
   return (
     <div className="add-question">
-      <h2>Add a New Question</h2>
+      <h2>Lägg Till En Ny Fråga</h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Question</label>
-          <textarea
-            value={question}
-            onChange={(e) => setQuestion(e.target.value)}
-            placeholder="Enter the question text"
-            rows="4"
-          ></textarea>
-        </div>
-
-        <div>
-          <label>Answer Unit</label>
-          <select 
-            value={answerUnit} 
-            onChange={(e) => setAnswerUnit(e.target.value)}
-            onFocus={fetchUnits}
-          >
-            <option value="">Select a unit</option>
-            {Array.isArray(units) && units.length > 0 ? (
-              units.map((unit) => (
-              <option key={unit.id} value={unit.name}>
-                {unit.name}
-              </option>
-            ))
-          ) : (
-            <option disabled>Loading or No Units Available</option>
-          )}
-          </select>
-        </div>
-
-        <div>
-          <label>Answer Formula</label>
-          <input
-            type="text"
-            value={answerFormula}
-            onChange={(e) => setAnswerFormula(e.target.value)}
-            placeholder="e.g. var_name * 1000"
-          />
-        </div>
-
-        <div>
-          <label>Variating Values (JSON format)</label>
-          <textarea
-            value={variatingValues}
-            onChange={(e) => setVariatingValues(e.target.value)}
-            placeholder='e.g. {"var1": [4,16]}'
-            rows="3"
-          ></textarea>
-        </div>
-
-        <div>
-          <label>Course</label>
-          <select 
-            value={course} 
-            onChange={handleCourseChange}
-            onFocus={fetchCourses}
-          >
-            <option value="">Select a course</option>
-            {Array.isArray(courses) && courses.length > 0 ? (
-              courses.map((crs) => (
-              <option key={crs.id} value={crs.code}>
-                {crs.code}
-              </option>
-            ))
-          ) : (
-            <option disabled>Loading or No Courses Available</option>
-          )}
-            <option value="__new__">Add new course</option>
-          </select>
-        </div>
-
-        <div>
-          <label>Question Type</label>
-          <select 
-            value={questionType} 
-            onChange={handleQtypeChange}
-            onFocus={fetchQtypes}
-          >
-            <option value="">Select a question type</option>
-            {Array.isArray(qtypes) && qtypes.length > 0 ? (
-              qtypes.map((qt) => (
-              <option key={qt.id} value={qt.id}>
-                {qt.name}
-              </option>
-            ))
-          ) : (
-            <option disabled>Loading or No Question Types Available</option>
-          )}
-            <option value="__new__">Add new question type</option>
-          </select>
-        </div>
-
-        <button type="submit">Add Question</button>
+        <fieldset>
+          <legend>Fråga Detaljer</legend>
+          {/* Question text */}
+          <div>
+            <label className="question-label">Fråga</label>
+            <textarea
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              placeholder="Enter the question text"
+              rows="4"
+            ></textarea>
+          </div>
+          {/* Answer unit and formula */}
+          <div>
+            <label className="bold-label">Svars Enhet</label>
+            <select
+              value={answerUnit}
+              onChange={(e) => setAnswerUnit(e.target.value)}
+              onFocus={fetchUnits}
+            >
+              <option value="">Välj En Enhet</option>
+              {Array.isArray(units) && units.length > 0 ? (
+                units.map((unit) => (
+                  <option key={unit.id} value={unit.name}>
+                    {unit.name}
+                  </option>
+                ))
+              ) : (
+                <option disabled>Inga Enheter Tillgängliga</option>
+              )}
+            </select>
+          </div>
+          <div>
+            <label className="bold-label">Svars Formel</label>
+            <input
+              type="text"
+              value={answerFormula}
+              onChange={(e) => setAnswerFormula(e.target.value)}
+              placeholder="e.g. var_name * 1000"
+            />
+          </div>
+          <div>
+            <label className="variating-values-label">Varierande Värden (JSON Format)</label>
+            <textarea
+              value={variatingValues}
+              onChange={(e) => setVariatingValues(e.target.value)}
+              placeholder='e.g. {"var1": [4,16]}'
+              rows="3"
+            ></textarea>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Kurs &amp; Fråge Typ</legend>
+          {/* Course field */}
+          <div>
+            <label className="bold-label">Kurs</label>
+            <select 
+              value={course} 
+              onChange={handleCourseChange}
+              onFocus={fetchCourses}
+            >
+              <option value="">Välj En Kurs</option>
+              {Array.isArray(courses) && courses.length > 0 ? (
+                courses.map((crs) => (
+                  <option key={crs.id} value={crs.code}>
+                    {crs.code}
+                  </option>
+                ))
+              ) : (
+                <option disabled>Inga Kurser Tillgängliga</option>
+              )}
+              <option value="__new__">Lägg Till En Ny Kurs</option>
+            </select>
+          </div>
+          {/* Question type field */}
+          <div>
+            <label className="bold-label">Fråge Typ</label>
+            <select 
+              value={questionType} 
+              onChange={handleQtypeChange}
+              onFocus={fetchQtypes}
+            >
+              <option value="">Välj En Frågetyp</option>
+              {Array.isArray(qtypes) && qtypes.length > 0 ? (
+                qtypes.map((qt) => (
+                  <option key={qt.id} value={qt.id}>
+                    {qt.name}
+                  </option>
+                ))
+              ) : (
+                <option disabled>Inga Frågetyper Tillgängliga</option>
+              )}
+              <option value="__new__">Lägg Till En Ny Frågetype</option>
+            </select>
+          </div>
+        </fieldset>
+        <button type="submit">Lägg till Fråga</button>
       </form>
 
       {/* Course Modal */}
@@ -283,7 +287,7 @@ const AddQuestion = () => {
             <h3>Add New Course</h3>
             <form onSubmit={handleNewCourseSubmit}>
               <div>
-                <label>Course Code</label>
+                <label>Kurs Kod</label>
                 <input
                   type="text"
                   value={newCourseCode}
@@ -293,7 +297,7 @@ const AddQuestion = () => {
                 />
               </div>
               <div>
-                <label>Course Name</label>
+                <label>Kurs Namn</label>
                 <input
                   type="text"
                   value={newCourseName}
@@ -302,7 +306,7 @@ const AddQuestion = () => {
                 />
               </div>
               <div>
-                <label>Question type list</label>
+                <label>Fråge Typ Lista</label>
                 <input
                   type="text"
                   value={newQtypeList}
@@ -329,7 +333,7 @@ const AddQuestion = () => {
             <h3>Add New Question Type</h3>
             <form onSubmit={handleNewQtypeSubmit}>
               <div>
-                <label>Question Type Name</label>
+                <label>Fråge Typ Namn</label>
                 <input
                   type="text"
                   value={newQtypeName}
