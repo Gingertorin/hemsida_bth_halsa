@@ -36,7 +36,7 @@ const validateAcceptedAnswer = (acceptedAnswer) => {
  * @param {Object} res - Express response object.
  * @returns {Object} - JSON response with success status and message.
  */
-router.post("/add", async (req, res) => {
+router.post("/units/add", async (req, res) => {
     try {
         const { ascii_name, accepted_answer } = req.body;
         if (!ascii_name || !accepted_answer) {

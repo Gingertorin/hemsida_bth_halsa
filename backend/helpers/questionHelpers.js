@@ -59,7 +59,7 @@ const generateValues = (variatingValuesJson) => {
  */
 const evaluateFormula = (formula, values) => {
     try {
-        const expression = formula.replace(/\b[a-zA-Z]+\b/g, match => values[match] ?? 0);
+        const expression = formula.replace(/\b[a-zA-Z]+\b/g, match => values[match] !== undefined ? values[match] : 0);
         return eval(expression);
     } catch (error) {
         return "Error in formula evaluation";

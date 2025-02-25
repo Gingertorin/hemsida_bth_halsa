@@ -40,7 +40,7 @@ const validateQuestionTypes = async (questionTypes) => {
  * @param {Object} res - Express response object.
  * @returns {Object} - JSON response with success status and message.
  */
-router.post("/add", async (req, res) => {
+router.post("/course/add", async (req, res) => {
     try {
         const { course_code, course_name, question_types } = req.body;
         if (!course_code || !course_name || !question_types) {

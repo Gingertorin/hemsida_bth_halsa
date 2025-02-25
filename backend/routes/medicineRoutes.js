@@ -31,7 +31,7 @@ async function isValidUrl(url) {
  * @param {Object} res - Express response object.
  * @returns {Object} - JSON response with success status and message.
  */
-router.post("/add", async (req, res) => {
+router.post("/medicine/add", async (req, res) => {
     try {
         let { name, fass_link, styrkor_doser } = req.body;
 

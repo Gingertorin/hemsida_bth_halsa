@@ -33,7 +33,7 @@ db.serialize(() => {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             namn TEXT UNIQUE NOT NULL,
             fass_link TEXT NOT NULL,
-            skyrkor_doser TEXT CHECK(json_valid(skyrkor_doser))
+            styrkor_doser TEXT CHECK(json_valid(styrkor_doser))
         )
     `);
 
