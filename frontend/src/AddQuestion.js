@@ -47,7 +47,7 @@ const AddQuestion = () => {
   // Handle main question form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    const course_code = course;
     const newQuestion = {
       question,
       answer_unit_id: answerUnit,
