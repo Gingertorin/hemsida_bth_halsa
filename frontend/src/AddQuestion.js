@@ -150,7 +150,7 @@ export default function AddQuestion() {
                                     onChange={(e) => setAnswerUnit(e.target.value)}
                                     placeholder="Skriv enhet"
                                     required
-                                    style={{ padding: "8px", borderRadius: "4px", border: "1px solid #ccc" }}
+                                    style={{ padding: "8px", borderRadius: "4px", border: "1px solid #ccc", width: "100%" }}
                                 />
                             )}
                         </div>
