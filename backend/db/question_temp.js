@@ -10,11 +10,11 @@ const tempDb = {
     ],
 
     courses: [
-        { course_code: "KM1423", course_name: "", question_types: "" },
-        { course_code: "KM1424", course_name: "", question_types: "" },
-        { course_code: "KM1425", course_name: "", question_types: "" },
-        { course_code: "OM1541", course_name: "", question_types: "" }
-    ],  // Questions can belong to multiple courses (solve with list of id's in question?)
+        { course_code: "KM1423", course_name: "KM1423", question_types: '["IDK"]' },
+        { course_code: "KM1424", course_name: "KM1424", question_types: '["Enhetsomvandling", "Dosage Calculation"]' },
+        { course_code: "KM1425", course_name: "KM1425", question_types: '["IDK"]' },
+        { course_code: "OM1541", course_name: "OM1541", question_types: '["IDK"]' }
+    ],
 
     qtypes: [
         { id: 0, name: "IDK", right_answers: 0, wrong_answers: 0, history_json: '[]' },
@@ -37,7 +37,7 @@ const tempDb = {
         answer_unit_id: 3,
         answer_formula: "dosage / available_dose",
         variating_values: "{'dosage' : [10,15], 'antal': [1,2,3], 'available_dose': [10], 'condition': 'dosage > 'avalible_dose'}",
-        course_code: 2,
+        course_code: "KM1424",
         question_type_id: 2,
     },
     {
@@ -45,7 +45,7 @@ const tempDb = {
         answer_unit_id: 3,
         answer_formula: "dosage / available_dose",
         variating_values: "{'dosage' : [10,15], 'antal': [1,2,3], 'available_dose': [10], 'condition': 'dosage > 'avalible_dose'}",
-        course_code: 2,
+        course_code: "KM1424",
         question_type_id: 2,
     },
     {
@@ -53,7 +53,7 @@ const tempDb = {
         answer_unit_id: 5,
         answer_formula: "dosage / tablet_dose",
         variating_values: "{'dosage': [125:500], 'tablet_dose': [0.13, 0.25]}",
-        course_code: 2,
+        course_code: "KM1424",
         question_type_id: 2,
     },
     {
@@ -61,7 +61,7 @@ const tempDb = {
         answer_unit_id: 3,
         answer_formula: "(dosage / 100) / available_dosa",
         variating_values: "{'dosage': [0.25:1:0.1], 'available_dose': [2.5]}",
-        course_code: 2,
+        course_code: "KM1424",
         question_type_id: 2,
     },
     {
@@ -69,7 +69,7 @@ const tempDb = {
         answer_unit_id: 6,
         answer_formula: "dosage * available_dose",
         variating_values: "{'dosage': [0.04:0.5:0.01], 'available_dose': [100]}",
-        course_code: 2,
+        course_code: "KM1424",
         question_type_id: 2,
     },
     {
@@ -77,7 +77,7 @@ const tempDb = {
         answer_unit_id: 4,
         answer_formula: "dosage * weight",
         variating_values: "{'dosage': [12.5, 25, 50], 'weight': [50:150:1]}",
-        course_code: 2,
+        course_code: "KM1424",
         question_type_id: 2,
     },
     {
@@ -85,10 +85,13 @@ const tempDb = {
         answer_unit_id: 4,
         answer_formula: "dosage * available_dose",
         variating_values: "{'dosage': [5:20:1], 'available_dose': [50]}",
-        course_code: 2,
+        course_code: "KM1424",
         question_type_id: 2,
     },
 
     ]
 
 }
+
+// Export the Variable
+module.exports = tempDb;

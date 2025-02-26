@@ -4,7 +4,7 @@ import "./MenuBar.css";
 export default function MenuBar({ setActiveTab }) {
   return (
     <div className="menu-bar">
-      <span className="menu-title">Läkemedelsberäkningar</span> {/* New title */}
+      <span className="menu-title">Läkemedelsberäkningar</span>
       <span className="menu-separator">|</span>
       <button className="menu-item" onClick={() => setActiveTab("home")}>
         Hem
@@ -14,8 +14,8 @@ export default function MenuBar({ setActiveTab }) {
         Lägg Till Frågor
       </button>
       <span className="menu-separator">|</span>
-      <button className="menu-item" onClick={() => setActiveTab("home")}>
-        Quiz
+      <button className="menu-item" onClick={() => setActiveTab("random")}>
+        Slumpmässig Fråga
       </button>
       <span className="menu-separator">|</span>
     </div>

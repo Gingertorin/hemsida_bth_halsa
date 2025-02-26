@@ -19,7 +19,7 @@ tables.forEach(table => {
                 return res.status(400).json({ success: false, message: "Invalid table name" });
             }
             const records = await getRecords(tableName);
-            console.log("Fetched qtypes:", records);
+            console.log("Fetched", tableName + ":", records);
             res.status(200).json({ success: true, records:  records});
         } catch (err) {
             res.status(500).json({ success: false, message: "Error fetching records" });
