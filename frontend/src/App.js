@@ -1,25 +1,24 @@
 import React, { useState } from "react";
 import "./App.css";
 
-import AddQuestion from "./AddQuestion"
-import MenuBar from "./MenuBar"
-import FooterMenuBar from "./FooterMenuBar"; // New import
+import AddQuestion from "./AddQuestion";
+import RandomQuestion from "./RandomQuestion"; // Import the new component
+import MenuBar from "./MenuBar";
+import FooterMenuBar from "./FooterMenuBar"; 
 
 function App() {
   const [activeTab, setActiveTab] = useState("home");
 
   return (
     <div className="App">
-      {/* Place MenuBar at the top */}
       <MenuBar setActiveTab={setActiveTab} />
       <div className="container">
-        {/* <h1>Läkemedelsberäkningar</h1> */}
-        {/* Removed old nav menu */}
         <div className="content">
           {activeTab === "upload" && <AddQuestion />}
+          {activeTab === "random" && <RandomQuestion />} {/* Add new page */}
         </div>
       </div>
-      <FooterMenuBar />  {/* Render footer */}
+      <FooterMenuBar />
     </div>
   );
 }

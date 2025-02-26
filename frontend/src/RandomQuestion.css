@@ -1,0 +1,112 @@
+.random-question-container {
+    max-width: 600px;
+    margin: 80px auto 20px; /* Adjusted for fixed menu bar */
+    padding: 20px;
+    background: linear-gradient(90deg, #273469 0%, #4a5cac 100%);
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    color: white;
+  }
+  
+  .random-question-container h2 {
+    font-size: 1.8rem;
+    font-weight: 800;
+  }
+  
+  .random-question-container p {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  
+  /* Course Selector Section */
+  .course-selector {
+    margin-bottom: 15px;
+  }
+  
+  .course-selector label {
+    font-size: 1.2rem;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .course-selector select {
+    padding: 12px;
+    font-size: 1rem;
+    width: 100%;
+    border-radius: 5px;
+    border: none;
+    text-align: center;
+    background: white;
+    color: #273469;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+  
+  .course-selector select:hover {
+    background: #4a5cac;
+    color: white;
+  }
+  
+  /* Input Field for Answer */
+  .random-question-container input {
+    width: 80%;
+    padding: 12px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: none;
+    text-align: center;
+    margin: 10px 0;
+    background: white;
+    color: #273469;
+    font-weight: 600;
+  }
+  
+  .random-question-container input:focus {
+    outline: none;
+    border: 2px solid #f0f0f0;
+  }
+  
+  /* Buttons (Fetch, Submit, Next Question) */
+  .random-question-container button {
+    background: none;
+    border: 2px solid white;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    padding: 12px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.3s ease, color 0.3s ease, background 0.3s ease;
+    border-radius: 5px;
+    margin: 10px;
+  }
+  
+  .random-question-container button:hover {
+    color: #273469;
+    background: white;
+    transform: scale(1.1);
+  }
+  
+  /* Feedback Message */
+  .feedback {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-top: 15px;
+  }
+  
+  /* Responsive Styling */
+  @media (max-width: 768px) {
+    .random-question-container {
+      width: 90%;
+      margin: 100px auto 20px;
+    }
+  
+    .random-question-container input {
+      width: 100%;
+    }
+  }
+  
