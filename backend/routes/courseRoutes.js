@@ -42,7 +42,7 @@ const validateQuestionTypes = async (questionTypes) => {
  */
 router.post("/add", async (req, res) => {
     try {
-        const { course_code, course_name, question_types } = req.body;
+        let { course_code, course_name, question_types } = req.body;
         if (!course_code || !course_name || !question_types) {
             return res.status(400).json({ success: false, message: "Missing required fields" });
         }
