@@ -2,31 +2,6 @@
 
 En webbapplikation för sjuksköterskestudenter vid BTH för at öva på olika läkemedelsberäkningar.
 
-## **Databas**
-
-| Column               | Typ  | Besktivning                                                                          |
-|----------------------|------|--------------------------------------------------------------------------------------|
-| **id** | int | UID with auto increment. |
-| **question** | text | The string for the question. |
-| **answer_unit** | text | The unit of the answer store as string. +|
-| **answer_formula** | text | A string with the formula to calculate the answer using the variables. |
-| **variating_values** | text | A string in JSON format that sets the rules to generate the values for the question. |
-| **course** | text| The course code for the question two letters and 4 numbers. |
-| **question_type** | text | Short string describing the question type. |
-
-### **Exempel på en fråga i JSON format**
-
-```json
-{
-    "question": "Omvandla %%var_name%%kg till %%var_name2%%g.",
-    "answer_unit": "g",
-    "answer_formula": "var_name * 1000",
-    "variating_values": "{ 'var_name': [50, 70], 'var_name2': [10, 20] }",
-    "course": "KM1423",
-    "question_type": "Enhetsomvandling"
-}
-```
-
 ## **Formatering av frågor**
 
 - Variabler omges av `%%variabel_namn%%`.
@@ -141,12 +116,38 @@ Exempel:
 ### **Exempel JSON på en fullständig fråga med avancerade regler**
 
 ```json
+    {
+        "question": "Läkaren har ordinerat Morfin %%dosage%% mg x %%antal%% subcutant. Tillgängligt: Morfin %%available_dose%% mg/ml. Hur många ml motsvarar en enkeldos?",
+        "answer_unit_id": 3,
+        "answer_formula": "dosage / available_dose",
+        "variating_values": "{'dosage' : [10,15], 'antal': [1,2,3], 'available_dose': [10], 'condition': 'dosage > 'avalible_dose'}",
+        "course_code": "KM1424",
+        "question_type_id": 2,
+    }
+```
+
+
+## **Return from Randome Question **
+
+| Column               | Typ  | Besktivning                                                                          |
+|----------------------|------|--------------------------------------------------------------------------------------|
+| **id** | int | UID |
+| **question** | text | The string for the question. |
+| **answer_unit_id** | int | The UID for the correct unit.|
+| **answer_formula** | obj | A function for the fomula where the generated numbers can be used as ags to get the answer. |
+| **variating_values** | text | A string in JSON format with the generated values in the form of a dictionary. |
+| **question_type_id** | int | The UID for the question type. |
+| **hint_id** | int | The UID for the hint. |
+
+### **Exempel på en fråga i JSON format**
+
+```json
 {
-    "question": "Läkaren har ordinerat %%dosage%% mg x %%antal%% subcutant. Tillgängligt: Morfin %%available_dose%% mg/ml. Hur många ml motsvarar en enkeldos?",
-    "answerFormula": "dosage / available_dose",
-    "answerUnit": "ml",
-    "variatingValues": "{'dosage': [5,10,15,20], 'antal': [1,5], 'available_dose': [5, 10, 15, 20], 'condition': 'dosage <= available_dose'}",
-    "course": "KM1423",
-    "questionType": "Dosage Calculation"
+    "question": "Omvandla %%var_name%%kg till %%var_name2%%g.",
+    "answer_unit_id": "g",
+    "answer_formula": "Func(a,b) -> a + b (var_name + var_name2)",
+    "variating_values": "{ 'var_name': 55, 'var_name2': 15 }",
+    "question_type_id": 1
+
 }
 ```
