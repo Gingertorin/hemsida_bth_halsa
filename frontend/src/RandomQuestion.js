@@ -46,18 +46,23 @@ const RandomQuestion = () => {
   setLoading(false);
   };
 
-  // Handle answer submission
-  const handleSubmit = (e) => {
+  // Handle answer submission using backend validation
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!questionData) return;
 
-    const correctAnswer = parseFloat(questionData.computed_answer);
-    const userAnswerNumber = parseFloat(userAnswer);
+    try {
+      const response = await axios.post("http://localhost:5000/api/question/check-answer", {
+        answer: userAnswer,
+        correctAnswer: questionData.computed_answer,
+        correctUnit: questionData.answer_units.accepted_answer,
+        formula: questionData.formula
+      });
 
-    if (!isNaN(userAnswerNumber) && userAnswerNumber === correctAnswer) {
-      setFeedback("Rätt svar! 🎉");
-    } else {
-      setFeedback(`Fel svar. Rätt svar är ${correctAnswer}.`);
+      setFeedback(response.data.message);
+    } catch (error) {
+      console.error("Error submitting answer:", error);
+      setFeedback("Ett fel uppstod vid svarskontrollen.");
     }
   };
 

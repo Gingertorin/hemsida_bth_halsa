@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { addRecord, getRecords, getQuestion } = require("../models/questionModel");
+const { addRecord, getRecords, getQuestion, getRecordById } = require("../models/questionModel");
 const { isValidJsonArray, isPositiveInteger, getRandomElement } = require("../helpers/routeHelpers");
-const { generateValues, formatQuestionText} = require("../helpers/questionHelpers");
+const { generateValues, formatQuestionText, checkAnswer} = require("../helpers/questionHelpers");
 
 
 
@@ -116,6 +116,7 @@ router.get("/random", async (req, res) => {
 
         // Dynamically parse and compute the formula
         let computedAnswer = null;
+        let parsedFormula = "Formeln är ej tillgänglig"; 
         try {
 
             // Validate that all variables in the formula exist in generatedValues
@@ -131,7 +132,7 @@ router.get("/random", async (req, res) => {
             }
 
             // Replace variables in the formula with actual values
-            let parsedFormula = question.answer_formula;
+            parsedFormula = question.answer_formula;
             for (const key in generatedValues) {
                 const regex = new RegExp(`\\b${key}\\b`, "g");
                 parsedFormula = parsedFormula.replace(regex, generatedValues[key]);
@@ -155,6 +156,10 @@ router.get("/random", async (req, res) => {
         // Replace placeholders in the question text
         let processedQuestion = formatQuestionText(question.question, generatedValues);
 
+        console.log(question.answer_unit_id)
+        const unitRecord = await getRecordById("units", question.answer_unit_id );
+
+
         res.status(200).json({
             success: true,
             data: {
@@ -162,7 +167,8 @@ router.get("/random", async (req, res) => {
                 question: processedQuestion,
                 generated_values: generatedValues,
                 computed_answer: computedAnswer,
-                answer_unit_id: question.answer_unit_id,
+                formula: parsedFormula,
+                answer_units: unitRecord,
                 course_code: question.course_code,
                 question_type_id: question.question_type_id,
             },
@@ -171,6 +177,19 @@ router.get("/random", async (req, res) => {
         console.error("Error:", err);
         res.status(500).json({ success: false, message: "Error retrieving question." });
     }
+});
+
+
+
+router.post('/check-answer', (req, res) => {
+    const { answer, correctAnswer, correctUnit, formula } = req.body;
+
+    if (!answer || !correctAnswer || !correctUnit || !formula) {
+        return res.status(400).json({ correct: false, message: "Missing required fields." });
+    }
+
+    const result = checkAnswer(answer, correctAnswer, correctUnit, formula);
+    res.json(result);
 });
 
 // ----------------------------- Export Routes -----------------------------

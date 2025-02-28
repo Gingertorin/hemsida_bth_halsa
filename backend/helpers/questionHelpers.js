@@ -166,31 +166,60 @@ function formatQuestionText(question, generatedValues) {
     return question_txt;
 }
 
-/**
- * Evaluates a formula using generated values.
- * @param {string} formula - The formula as a string.
- * @param {Object} values - An object containing variable-value mappings.
- * @returns {number|string} - The computed result or an error message.
- */
-function evaluateFormula(formula, values) {
-    try {
-        // Ensure all required values exist
-        for (const key of Object.keys(values)) {
-            if (values[key] === undefined || values[key] === null) {
-                throw new Error(`Variable ${key} is undefined in formula`);
-            }
-        }
+function checkAnswer(userAnswer, correctAnswer, correctUnits, formula) {
 
-        // Evaluate formula safely
-        return new Function(...Object.keys(values), `return ${formula};`)(...Object.values(values));
-    } catch (err) {
-        console.error("Error evaluating formula:", err);
-        return null;
+
+    try {
+        correctUnits = JSON.parse(correctUnits);
+    } catch (error) {
+        console.error("Error parsing accepted_answers:", error);
+        return res.status(500).json({ success: false, message: "Invalid accepted_answers format." });
     }
+    
+
+    const answerPattern = /^\s*([\d.,]+)\s*([a-zA-Z]*)\s*$/; // Extract number and unit with optional whitespace
+    const match = userAnswer.match(answerPattern);
+
+    if (!match) {
+        return { correct: false, message: "Invalid format. Use number followed by unit (e.g., '5 kg')." };
+    }
+
+    let userValue = match[1].replace(',', '.'); // Replace comma with dot for decimal parsing
+    userValue = parseFloat(userValue);
+
+    if (isNaN(userValue)) {
+        return { correct: false, message: "Invalid number format. Use a valid numeric value (e.g., '5.5 kg' or '5,5 kg')." };
+    }
+
+    const userUnit = match[2].trim(); // Trim unnecessary whitespace from unit
+
+    // Ensure correctUnits is an array (supports multiple accepted unit names)
+    if (!Array.isArray(correctUnits)) {
+        correctUnits = [correctUnits]; // Convert to array if it's a single unit
+    }
+
+    // 🔹 Round both user answer and correct answer to 2 decimal places for comparison
+    const roundedUserValue = parseFloat(userValue.toFixed(2));
+    const roundedCorrectAnswer = parseFloat(correctAnswer.toFixed(2));
+
+    if (roundedUserValue !== roundedCorrectAnswer) {
+        return {
+            correct: false,
+            message: `Incorrect answer. Expected ${roundedCorrectAnswer} ${correctUnits[0]}. Calculation: ${formatFormula(formula)}`
+        };
+    }
+
+    return { correct: true, message: "Correct!" };
 }
+
+function formatFormula(formula) {
+    return formula.replace(/\d+\.\d+/g, match => parseFloat(match).toFixed(2));
+}
+
 
 // Export all helper functions
 module.exports = {
     generateValues,
-    formatQuestionText
+    formatQuestionText,
+    checkAnswer
 };
