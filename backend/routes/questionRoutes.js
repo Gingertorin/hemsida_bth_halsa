@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { addRecord, getRecords, getRecordById } = require("../models/questionModel");
+const { addRecord, getRecords, getQuestion } = require("../models/questionModel");
 const { isValidJsonArray, isPositiveInteger, getRandomElement } = require("../helpers/routeHelpers");
-const { generateValues, evaluateFormula } = require("../helpers/questionHelpers");
+const { generateValues, formatQuestionText} = require("../helpers/questionHelpers");
 
 
 
@@ -72,41 +72,104 @@ router.post("/add", async (req, res) => {
  */
 router.get("/random", async (req, res) => {
     try {
-        const { course_code, question_type_id } = req.query;
-
-        if (!course_code && !question_type_id) {
-            return res.status(400).json({ success: false, message: "A course code or question type ID must be provided." });
+        const { course_code } = req.query;
+        if (!course_code) {
+            return res.status(400).json({ success: false, message: "A course code must be provided." });
         }
 
-        const filters = {};
-        if (course_code) filters.course_code = course_code.toUpperCase();
-        if (question_type_id && isPositiveInteger(Number(question_type_id))) {
-            filters.question_type_id = Number(question_type_id);
-        }
-
-        const questions = await getRecords("question_data", filters);
+        const questions = await getQuestion(course_code);
         if (questions.length === 0) {
-            return res.status(404).json({ success: false, message: "No questions found for the given filters." });
+            return res.status(404).json({ success: false, message: "No questions found." });
         }
 
-        // Select a random question
-        const randomQuestion = getRandomElement(questions);
-        const generatedValues = generateValues(randomQuestion.variating_values);
-        const computedAnswer = evaluateFormula(randomQuestion.answer_formula, generatedValues);
+        let question = getRandomElement(questions);
 
-        // Process and return the question
-        const processedQuestion = {
-            id: randomQuestion.id,
-            question: randomQuestion.question,
-            generated_values: generatedValues,
-            computed_answer: computedAnswer,
-            course_code: randomQuestion.course_code,
-            question_type_id: randomQuestion.question_type_id
-        };
-        console.log("Test")
-        res.status(200).json({ success: true, data: processedQuestion });
+        let variatingValues;
+        try {
+            variatingValues = JSON.parse(question.variating_values);
+        
+            // If `variatingValues` is still a string after parsing, parse it again
+            if (typeof variatingValues === "string") {
+                variatingValues = JSON.parse(variatingValues);
+            }
+        } catch (error) {
+            console.error("Error parsing variating_values:", error);
+            return res.status(500).json({ success: false, message: "Invalid variating_values format." });
+        }
+        
+        
+        const medicineList = await getRecords("medicine");
+
+        const generatedValues = generateValues(question.question, variatingValues, medicineList);
+
+        // Ensure required values exist before evaluating the formula
+        const missingKeys = Object.keys(generatedValues).filter(
+            (key) => generatedValues[key] === undefined || generatedValues[key] === null
+        );
+        if (missingKeys.length > 0) {
+            console.error("Missing variables for calculation:", missingKeys);
+            return res.status(500).json({
+                success: false,
+                message: `Missing required values for formula: ${missingKeys.join(", ")}`,
+            });
+        }
+
+        // Dynamically parse and compute the formula
+        let computedAnswer = null;
+        try {
+
+            // Validate that all variables in the formula exist in generatedValues
+            const formulaVars = question.answer_formula.match(/[a-zA-Z_]+/g) || [];
+            const missingVars = formulaVars.filter(v => generatedValues[v] === undefined);
+
+            if (missingVars.length > 0) {
+                console.error("Missing variables for formula evaluation:", missingVars);
+                return res.status(500).json({ 
+                    success: false, 
+                    message: `Missing required values for formula: ${missingVars.join(", ")}` 
+                });
+            }
+
+            // Replace variables in the formula with actual values
+            let parsedFormula = question.answer_formula;
+            for (const key in generatedValues) {
+                const regex = new RegExp(`\\b${key}\\b`, "g");
+                parsedFormula = parsedFormula.replace(regex, generatedValues[key]);
+            }
+
+            // Ensure the final parsed formula contains only numbers and operators
+            if (!/^[0-9+\-*/().\s]+$/.test(parsedFormula)) {
+                console.error("Invalid formula after substitution:", parsedFormula);
+                return res.status(500).json({ success: false, message: "Invalid formula format." });
+            }
+
+            // Compute result safely
+            computedAnswer = new Function(`return ${parsedFormula};`)();
+
+        } catch (err) {
+            console.error("Error evaluating formula:", err);
+            return res.status(500).json({ success: false, message: "Error evaluating formula." });
+        }
+
+
+        // Replace placeholders in the question text
+        let processedQuestion = formatQuestionText(question.question, generatedValues);
+
+        res.status(200).json({
+            success: true,
+            data: {
+                id: question.id,
+                question: processedQuestion,
+                generated_values: generatedValues,
+                computed_answer: computedAnswer,
+                answer_unit_id: question.answer_unit_id,
+                course_code: question.course_code,
+                question_type_id: question.question_type_id,
+            },
+        });
     } catch (err) {
-        res.status(500).json({ success: false, message: "Error retrieving and processing question" });
+        console.error("Error:", err);
+        res.status(500).json({ success: false, message: "Error retrieving question." });
     }
 });
 

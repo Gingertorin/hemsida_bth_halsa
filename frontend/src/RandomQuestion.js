@@ -7,25 +7,20 @@ const RandomQuestion = () => {
   const [userAnswer, setUserAnswer] = useState("");
   const [feedback, setFeedback] = useState("");
   const [loading, setLoading] = useState(false);
-  const [courses, setCourses] = useState([]); // Store available courses
-  const [selectedCourse, setSelectedCourse] = useState(""); // Store user selection
+  const [courses, setCourses] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState("");
 
-  // Fetch available courses from the backend
-  const fetchCourses = async () => {
-    try {
-      const response = await axios.get("http://localhost:5000/api/course/all");
-      if (response.data.records) {
-        setCourses(response.data.records);
-      }
-    } catch (error) {
-      console.error("Error fetching courses:", error);
-    }
-  };
+  // Fetch courses from backend
+  useEffect(() => {
+    axios.get("http://localhost:5000/api/course/all").then((res) => {
+      setCourses(res.data.records);
+    });
+  }, []);
 
-  // Fetch a random question based on the selected course
+  // Fetch a random question
   const fetchRandomQuestion = async () => {
     if (!selectedCourse) {
-      setFeedback("Please select a course first.");
+      setFeedback("Välj en kurs först.");
       return;
     }
 
@@ -37,19 +32,19 @@ const RandomQuestion = () => {
         setFeedback("");
         setUserAnswer("");
       } else {
-        setFeedback("No question found for this course.");
+        setQuestionData("");
       }
     } catch (error) {
-      console.error("Error fetching question:", error);
-      setFeedback("Error fetching question.");
-    }
-    setLoading(false);
+      setQuestionData("");
+      if (error.response && error.response.status === 404) {
+          setFeedback("Ingen fråga hittades.");
+      } else {
+          console.error("Error fetching question:", error);
+          setFeedback("Fel vid hämtning av fråga.");
+      }
+  }
+  setLoading(false);
   };
-
-  // Fetch courses on component mount
-  useEffect(() => {
-    fetchCourses();
-  }, []);
 
   // Handle answer submission
   const handleSubmit = (e) => {
@@ -60,9 +55,9 @@ const RandomQuestion = () => {
     const userAnswerNumber = parseFloat(userAnswer);
 
     if (!isNaN(userAnswerNumber) && userAnswerNumber === correctAnswer) {
-      setFeedback("Correct! 🎉");
+      setFeedback("Rätt svar! 🎉");
     } else {
-      setFeedback(`Incorrect. The correct answer is ${correctAnswer}.`);
+      setFeedback(`Fel svar. Rätt svar är ${correctAnswer}.`);
     }
   };
 
@@ -70,28 +65,28 @@ const RandomQuestion = () => {
     <div className="random-question-container">
       <h2>Slumpmässig Fråga</h2>
 
-      {/* Course Selection Dropdown */}
+      {/* Course Selection */}
       <div className="course-selector">
         <label>Välj en kurs:</label>
         <select value={selectedCourse} onChange={(e) => setSelectedCourse(e.target.value)}>
-        <option value="">-- Välj en kurs --</option>
-        {courses.map((course) => (
-            <option key={course.id} value={course.code}>
-            {course.course_code}: {course.course_name} {/* Ensuring both code & name are shown */}
+          <option value="">-- Välj en kurs --</option>
+          {courses.map((course) => (
+            <option key={course.course_code} value={course.course_code}>
+              {course.course_code}: {course.course_name}
             </option>
-        ))}
+          ))}
         </select>
       </div>
 
-      <button onClick={fetchRandomQuestion} disabled={!selectedCourse}>Hämta Fråga</button>
+      <button onClick={fetchRandomQuestion}>Hämta Fråga</button>
 
       {loading && <p>Laddar...</p>}
 
       {questionData ? (
         <div>
-          <p><strong>Fråga:</strong> {questionData.question}</p>
+          <p>{questionData.question}</p>
           <form onSubmit={handleSubmit}>
-            <label>Ditt svar ({questionData.answer_unit}):</label>
+            <label>Ditt svar ({questionData.answer_unit_id}):</label>
             <input
               type="text"
               value={userAnswer}

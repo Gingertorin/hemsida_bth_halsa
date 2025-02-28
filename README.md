@@ -96,22 +96,6 @@ Exempel:
 
   > **OBS!** `big_var` måste alltid kunna vara större än `small_var`.
 
-### **Regler baserat på en annan variabel**
-
-- istället för en lista sätt variabel till `'var': "varibel_1 ? [1], [2], [3]"`.
-- Listorna följer samma regler.
-- Exempel:
-
-  ```json
-  { "medicin_typ": ["Medicin A", "Medicin B"], "dos": "medicin_typ ? [2, 5, 10], [2, 4, 0.5]" }
-  ```
-
-  - Om `medicin_typ = Medicin A`, ges `dos = [2, 5, 10]`
-  - Om `medicin_typ = Medicin B`, ges `dos = [2, 4, 0.5]`
-
-> **OBS!** Det måste finnas lika många listor som alternativ för `varibel_1`.
-
----
 
 ### **Exempel JSON på en fullständig fråga med avancerade regler**
 
