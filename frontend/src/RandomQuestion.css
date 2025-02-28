@@ -87,9 +87,9 @@
   
   .random-question-container button:hover {
     color: #273469;
-    background: white;
+    background: #f5f5f5; /* Softer off-white */
     transform: scale(1.1);
-  }
+}
   
   /* Feedback Message */
   .feedback {
@@ -109,4 +109,13 @@
       width: 100%;
     }
   }
+
+  .feedback.correct {
+    color: #4CAF50; /* Green for correct answers */
+  }
+
+  .feedback.incorrect {
+    color: #FF4C4C; /* Red for incorrect answers */
+  }
+
   

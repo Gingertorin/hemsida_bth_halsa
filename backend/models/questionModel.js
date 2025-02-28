@@ -194,6 +194,29 @@ const deleteRecord = (table, id) => {
     });
 };
 
+
+
+/**
+ * Retrieves a questions for course by course code.
+ * @param {string} code - The course code (string xx1234).
+ * @returns {Promise<Object>} - The retrieved record.
+ */
+const getQuestion = (code) => {
+    console.log(code)
+    return new Promise((resolve, reject) => {
+        db.all(`SELECT * FROM question_data WHERE course_code = ?`, [code], (err, rows) => {
+            if (err) {
+                return reject({ message: "Database error", status: 500 });
+            }
+            if (!rows  || rows.length === 0) {
+                return resolve([]);
+            }
+            resolve(rows);
+        });
+    });
+};
+
+
 // -------------------------- Export Functions -----------------------------
 module.exports = {
     addRecord,
@@ -201,4 +224,5 @@ module.exports = {
     getRecordById,
     updateRecord,
     deleteRecord,
+    getQuestion
 };
